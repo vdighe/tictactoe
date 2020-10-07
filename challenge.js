@@ -4,38 +4,62 @@
 'use strict';
 function init() {
     console.log('Welcome to Tic tac Toe 9000');
-    var buttonAll = document.querySelectorAll(".square");
+    let buttonAll = document.querySelectorAll(".square");
     console.log(buttonAll);
-    let i=1;
+    let i=0;
     buttonAll.forEach((button) => {
-            button.setAttribute("id", i++);
-            button.addEventListener('click', (e) => {
-                let id = button.getAttribute('id');
-                button.innerText =id;
-                console.log(`Clicked ${id}`);})
+            button.setAttribute("id", ++i);    
+            button.addEventListener('click', onSquareClick);       
     });
+    document.querySelector(".restart").addEventListener('click', onReset);
 }
 init();
+let numberOfPlayers = 2;
+let currentPlayer = 0;
+const player1Symbol = "X";
+const player2Symbol = "O";
 
+class Player {
+    constructor(id, symbol, isTurn=false){
+        this.id =id;
+        this.symbol=symbol;
+        this.isTurn = isTurn;
+    }
+    play() {
+        this.isTurn = !this.isTurn;
+    }
+}
+
+let player1 = new Player(1,'X',true);
+let player2 = new Player(2,'0',false);
+
+function switchTurn() {
+    player1.play()
+    player2.play()
+}
 
 function onSquareClick(event) {
-    console.log(event);
-
-}
-/*
-const buttonContainer = document.querySelector(".js-control-panel");
-buttonContainer.addEventListener('click',(e) => {
-    if (e.target.classList.contains('js-button')){
-     console.log(event.target);
-        let id = e.target.getAttribute('id');
-        console.log(`A button clicked! ${id} `);
-       
-       buttonAll.forEach((ele, indx)=> {
-            if (ele ===  event.target){
-                console.log(`Button number: ${indx+1}`);
-            }
-        })
+    if ((event.target.innerText === null )|| (event.target.innerText === '' )){
+        if (player1.isTurn){
+            event.target.innerText = player1.symbol;
+            event.target.classList.add('p1');
+        }
+        else if (player2.isTurn) {
+            event.target.innerText = player2.symbol;
+            event.target.classList.add('p2');
+        }
+        switchTurn();
+    } else {
+        event.target.classList.add('noclick');
     }
-        
-});
-*/
+}
+
+function onReset(event){
+    document.querySelectorAll(".square").forEach((square) => {
+        square.innerText ='';
+        square.classList.remove('p1');
+        square.classList.remove('p2');
+        square.classList.remove('noclick');
+
+    });
+}
