@@ -6,12 +6,11 @@ function init() {
     console.log('Welcome to Tic tac Toe 9000');
     let buttonAll = document.querySelectorAll(".square");
     console.log(buttonAll);
-    let i=0;
+
     buttonAll.forEach((button) => {
-            button.setAttribute("id", ++i);    
             button.addEventListener('click', onSquareClick);       
     });
-    document.querySelector(".restart").addEventListener('click', onReset);
+    document.querySelector(".reset").addEventListener('click', onReset);
 }
 init();
 let numberOfPlayers = 2;

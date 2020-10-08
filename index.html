@@ -1,40 +1,33 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Tic Tac Toe 2020</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <header>
-      <h1>Tic Tac Toe</h1>
-    </header>
-    <main>
-
-            <div class='chooser'>
-                <div class='p1'>Player 1: 0</div>
-                <h1 class='header'>Tic Tac Toe</h1>
-                <div class='p2'>Player 2: 0</div>
-              </div>
-            <div class="game-board">   
-                <div class="matrix">
-                    <div class="square"></div>
-                    <div class="square"></div>
-                    <div class="square"></div>
-                    <div class="square"></div>
-                    <div class="square"></div>
-                    <div class="square"></div>
-                    <div class="square"></div>
-                    <div class="square"></div>
-                    <div class="square"></div>
-                </div>               
-            </div>
-            <div class='wrapper'>
-                <button type="button" class="restart">Restart</button>
-            </div>
-   
-    </main>
-    <script src="challenge.js"></script>
-  </body>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tic Tac Toe 2020</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="text-center"id="box">
+            <header>
+            <h1>Tic Tac Toe</h1>
+            </header>
+        <div id="message"></div>
+            <ul id="gameBoard">
+            <li class="square"id="1"></li>
+            <li class="square"id="2"></li>
+            <li class="square"id="3"></li>
+            <li class="square"id="4"></li>
+            <li class="square"id="5"></li>
+            <li class="square"id="6"></li>
+            <li class="square"id="7"></li>
+            <li class="square"id="8"></li>
+            <li class="square"id="9"></li>
+            </ul>
+            <div class="clearfix"></div>
+        <footer>
+            <button class="reset">Play Again</button>
+        </footer>
+        </div> 
+        <script src="challenge.js"></script>     
+    </body>
 </html>
