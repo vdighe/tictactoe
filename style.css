@@ -18,7 +18,7 @@ body{
     font-size: 28px;
     color: #fff;
   }
-  .clearfix{
+  .cleanup{
     clear: both;
   }
   #box{
@@ -47,7 +47,7 @@ body{
   }
   #gameBoard li:hover, #reset:hover{
     cursor: pointer;
-    background: #000;
+    background: rgb(0, 0, 0);
   }
  .reset{
     border: 0;
@@ -58,11 +58,11 @@ body{
     border-radius: 5px;
     font-size: 20px;
   }
-  .x {
+  .X {
     color: tomato;
   }
   
-  .o {
+  .O {
     color: #33DBFF;
   }
   

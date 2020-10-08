@@ -2,6 +2,17 @@
 // by changing them to throw errors. And help JavaScript engines 
 // to perform optimizations to run our code faster.
 'use strict';
+/**
+ * Winning combination is 3 horizontal, 3 verticle, and 2 diagonal
+ */
+const WINNIG_COMBINATION = [[1,2,3],
+                            [4,5,6],
+                            [7,8,9],
+                            [1,4,7],
+                            [2,5,8],
+                            [3,6,9],
+                            [1,5,9],
+                            [3,5,7]];
 function init() {
     console.log('Welcome to Tic tac Toe 9000');
     let buttonAll = document.querySelectorAll(".square");
@@ -23,14 +34,13 @@ class Player {
         this.id =id;
         this.symbol=symbol;
         this.isTurn = isTurn;
+        this.isWinner = false;
     }
     play() {
         this.isTurn = !this.isTurn;
     }
 }
 
-let player1 = new Player(1,'X',true);
-let player2 = new Player(2,'0',false);
 
 function switchTurn() {
     player1.play()
@@ -56,9 +66,13 @@ function onSquareClick(event) {
 function onReset(event){
     document.querySelectorAll(".square").forEach((square) => {
         square.innerText ='';
-        square.classList.remove('p1');
-        square.classList.remove('p2');
-        square.classList.remove('noclick');
-
     });
 }
+/**
+ * Begin the game with player one
+ */
+
+let player1 = new Player(1,'X');
+let player2 = new Player(2,'0');
+
+player1.isTurn = true;
