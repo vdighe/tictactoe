@@ -1,65 +1,124 @@
 @import url(http://fonts.googleapis.com/css?family=Monoton);
 
-body{
-
+body {  
     background-image: url('ps_neutral.png');
-  }
-
-  header {
-    text-align: center;
-    padding: 1rem 0;
-    background-color: #333;
+    margin-top: 40px;
+    color: black;
+    font-family: Helvetica;
+    font-weight: bold;
+    text-align:center;
   }
 
   h1{
     text-align: center;
     font-family: Monoton;
     font-size: 28px;
-    color: #fff;
+    color: black;
   }
-  .cleanup{
-    clear: both;
-  }
-  #box{
-    width: 350px;
-    overflow: auto;
-    margin: 40px auto;
-    background: #666;
-    padding-bottom: 40px;
-    border-radius: 10px;
-  }
-  #message{
-    background: #333;
-    color: #fff;
-  }
-  #gameBoard li{
-    float: left;
-    margin: 10px;
-    height: 70px;
-    width: 70px;
-    font-size: 50px;
-    background: #333;
-    color: #ccc;
+
+.container {
+    margin: 0 auto;
+    width: 400px;
+}
+
+#gameBoard {
+    width: 300px;
+    height: 300px;
+    border: 1px solid #dadada;
+    margin: 0 auto;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+#gameBoard > li {
     list-style: none;
-    text-align: center;
-    border-radius: 5px;
-  }
-  #gameBoard li:hover, #reset:hover{
+    float: left;
+    overflow: hidden;
+    text-decoration:none;
+    width: 100px;
+    height: 100px;
+    background: #f1f1f1;
+    border: 1px solid #ccc;
+    border-right: 1px solid #fff;
     cursor: pointer;
-    background: rgb(0, 0, 0);
-  }
- .reset{
-    border: 0;
-    background: #444;
-    color: #fff;
-    width: 70%;
-    padding: 15px;
-    border-radius: 5px;
-    font-size: 20px;
-  }
-  
-  footer{
-    display: block;
+    font-size: 50px;
     text-align: center;
     padding-top: 20px;
-  }
+    box-sizing: border-box;
+}
+
+#gameBoard > li.X {
+    font-size: 40px;
+    color: #ed4e6e
+}
+
+#gameBoard > li.O {
+    font-size: 40px;
+    color: #485b6e;
+}
+
+#gameBoard > li:hover {
+    background: #f9f9f9;
+}
+
+#gameBoard > li:active {
+    width: 100px;
+    height: 100px;
+    border: 0;
+}
+
+#nfo {
+    text-align:center;
+    margin-top: 10px;
+}
+
+#turn-keeper > span,
+#game-messages > span {
+    display: none;
+}
+
+#turn-keeper.x span.x,
+#turn-keeper.o span.o, 
+#game-messages.player-x-win > span.player-x-win, 
+#game-messages.player-o-win > span.player-o-win,
+#game-messages.draw > span.draw {
+    display: block;
+    margin-top: 10px;
+}
+
+#reset {
+    text-align: center;
+        border: none;
+        padding: 0.6em 1.2em;
+        background: #94797f;
+        color: black;
+        font-size: 1em;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: inline-block;
+        margin: 3px 2px;
+        border-radius: 2px;
+}
+
+#reset:hover {
+        background: #2c3e52;
+}
+
+
+#gameMessages > span {
+    display: none;
+}
+
+
+#gameMessages.player-one-scor > span.player-x-win, 
+#gameMessages.player-o-win > span.player-o-win,
+#gameMessages.draw > span.draw {
+    display: grid;
+    margin-top: 10px;
+    align-content: end;
+}
+.box {
+  display: flex;
+  align-items: stretch;
+}

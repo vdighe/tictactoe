@@ -25,7 +25,7 @@ function init() {
     buttonAll.forEach((button) => {
         button.addEventListener('click', onSquareClick);
     });
-    document.querySelector(".reset").addEventListener('click', onReset);
+    document.querySelector("#reset").addEventListener('click', onReset);
 }
 init();
 let numberOfPlayers = 2;
@@ -44,7 +44,7 @@ class Player {
 }
 
 /**
- * Empty the Array for the players
+ * Reset the game
  */
 function resetGame() {
 
