@@ -46,12 +46,12 @@ body {
     padding-top: 20px;
     box-sizing: border-box;
 }
-.square.X {
-    font-size: 50px;
+.square.x {
+    font-size: 60px;
     color: #ed4e6e
 }
-.square.O {
-    font-size: 40px;
+.square.o {
+    font-size: 60px;
     color: #313031;
 }
 /*

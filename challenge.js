@@ -5,7 +5,7 @@
 /**
  * Winning combination is 3 horizontal, 3 verticle, and 2 diagonal
  */
-const WINNING_COMBINATION= [[1, 2, 3],
+const WINNING_COMBINATION = [[1, 2, 3],
 [4, 5, 6],
 [7, 8, 9],
 [1, 4, 7],
@@ -13,42 +13,30 @@ const WINNING_COMBINATION= [[1, 2, 3],
 [3, 6, 9],
 [1, 5, 9],
 [3, 5, 7]];
-const player1Arr = []
-const player2Arr = []
-
-let player1Combs =[];
-let player2Combs =[];
-
-const MAXCNT=3;
-let player1 ;
-let player2 ;
-
-let gameStatus = false;
+let symbols = ['x', 'o'];
 let gameBoard;
+let turns;
 
 function gameInit() {
     console.log('Welcome to Tic tac Toe 9000');
     let buttonAll = document.querySelectorAll(".square");
-    console.log(buttonAll);
-
+    turns = 0;
     buttonAll.forEach((button) => {
         button.addEventListener('click', onSquareClick);
     });
-    gameStatus = true;
     document.querySelector("#reset").addEventListener('click', onReset);
-    gameBoard = new GameBoard();
+    gameBoard = new GameBoard(symbols);
 }
-
-
 
 /**
  * Reset the game
  */
 function resetGame() {
+    gameBoard.players.forEach((one) => {
+        let len = one.clicksArr.length;
+        one.clicksArr.splice(0, len);
 
-    gameBoard.player1.clicksArr.splice(0, gameBoard.player1.clicksArr.length);
-    gameBoard.player2.clicksArr.splice(0, gameBoard.player2.clicksArr.length);
- 
+    });
     document.querySelectorAll(".square").forEach((square) => {
         square.innerText = '';
     });
@@ -60,8 +48,8 @@ function disableGame() {
     });
 }
 
-function switchTurn() {
-    gameBoard.switchTurn();
+function switchTurn(next) {
+    gameBoard.next.play();
 }
 
 /**
@@ -70,7 +58,7 @@ function switchTurn() {
  * @param {*} arra 
  * @param {*} arra_size 
  */
-function subset(arra, arra_size=MAXCNT) {
+function subset(arra, arra_size) {
     let result_set = [],
         result;
     for (var x = 0; x < Math.pow(2, arra.length); x++) {
@@ -104,10 +92,10 @@ function arrayEquals(a, b) {
  * Check if the array has any winning combination
  * @param {*} array 
  */
-function isWinner(array) {
-    
-    for (let i=0; i < array.length; i++){
-        for (let j=0; j < WINNING_COMBINATION.length; j++){
+function isInWinArray(array) {
+
+    for (let i = 0; i < array.length; i++) {
+        for (let j = 0; j < WINNING_COMBINATION.length; j++) {
             if (arrayEquals(array[i], WINNING_COMBINATION[j]))
                 return true;
         }
@@ -115,77 +103,79 @@ function isWinner(array) {
     return false;
 }
 
+function checkSquare(ele){
+    let ret = (gameBoard.gameStatus) || (ele.innerText === null) || (ele.innerText === '')? true:false;
+    console.log(`checkSqure ${ret}`);
+    return (ele)
+}
 /**
  * User should be allowed to play only when the game is to begin.
  * @param {*} event 
  */
-function onSquareClick(event) {    
+function onSquareClick(event) {
 
-    let square= event.target;
-    
-    if ((gameBoard.gameStatus === true)|| (square.innerText === null) || (square.innerText === '')) {
-        if (gameBoard.player1.isTurn) {
-            square.classList.add(gameBoard.player1.symbol);
-            square.innerText = gameBoard.player1.symbol;
-            document.querySelector('#gameInfo #gameTurn').classList.remove('x');
-            document.querySelector('#gameInfo #gameTurn').classList.add('o');
-            gameBoard.player1.clicksArr.push(parseInt(event.target.id));
-            if (gameBoard.player1.clicksArr.length >= 3) {
-                gameBoard.player1.combsArr = subset(gameBoard.player1.clicksArr, 3);            
-                if (isWinner(gameBoard.player1.combsArr)){
-                    console.log ('Player 1 wins');
-                    gameBoard.player1.isWinner=true;
-                    console.log(document.querySelector('#gameMessages .player-x-win'));
-                    document.querySelector('#gameMessages').classList.add('player-x-win');
-                    gameBoard.gameStatus =false;
-                    disableGame();
-                }
-            }
-        } else if (gameBoard.player2.isTurn) {
-            square.classList.add(gameBoard.player2.symbol);
-            square.innerText = gameBoard.player2.symbol;
-            document.querySelector('#gameInfo #gameTurn').classList.remove('o');
-            document.querySelector('#gameInfo #gameTurn').classList.add('x');
-            gameBoard.player2.clicksArr.push(parseInt(event.target.id));
-            if (gameBoard.player2.clicksArr.length >= 3) {
-                gameBoard.player2.combsArr = subset(gameBoard.player2.clicksArr, 3);
-             
-                if (isWinner(gameBoard.player2.combsArr)){
-                    gameBoard.player2.isWinner=true;
-                    document.querySelector('#gameMessages').classList.add('player-o-win');
-                    gameBoard.gameStatus =false;
-                    disableGame();
-                }
-                
+    let square = event.target;
+    let player = gameBoard.getPlayer(turns);
+    console.log(player);
+    let className ='';
+    turns = (++turns % 2);
+    console.log(turns);
+    let nextPlayer = gameBoard.getPlayer(turns);
+    console.log(nextPlayer);
+    /**
+     * Check if the game is on and the blank square
+     */
+    if (checkSquare(square)) {
+        if(player.isTurn){
+            player.play();
+            square.classList.add(player.symbol);
+            square.innerText = player.symbol;
+            document.querySelector('#gameInfo #gameTurn').classList.remove(player.symbol);
+            document.querySelector('#gameInfo #gameTurn').classList.add(nextPlayer.symbol);
+            player.clicksArr.push(parseInt(event.target.id));
+            if (player.isWinner()){
+                className = `player-${player.symbol}-win`;
+                console.log(`${className}`);;
+                document.querySelector('#gameMessages').classList.add(className);
+                console.log(document.querySelector('#gameMessages'));
+                gameBoard.gameStatus = false;
+                disableGame();
             }
         }
-        switchTurn();
+        nextPlayer.play();
+        square.style.pointerEvents = 'none';
     }
-    //console.log(`After every click ${gameStatus} Player 1(${player1Arr.length}) Player 2(${player2Arr.length})`);
     if (gameBoard.isGameOver()) {
         gameBoard.gameStatus = false;
         document.querySelector('#gameMessages').classList.add('draw');
         disableGame();
-   }
+    }
 }
 
 function onReset(event) {
-    resetGame();   
+    resetGame();
 }
 class Player {
-    constructor(id, symbol, isTurn = false) {
-        this.id = id;
+    constructor(symbol, isTurn = false) {
         this.symbol = symbol;
         this.isTurn = isTurn;
-        this.isWinner = false;
         this.clicksArr = [];
         this.combsArr = [];
     }
     play() {
         this.isTurn = !this.isTurn;
     }
-    getClickCnt(){
+    getClickCnt() {
         return this.clicksArr.length;
+    }
+    isWinner() {
+        if (this.clicksArr.length >= 3) {
+            this.combsArr = subset(this.clicksArr, 3);
+            if (isInWinArray(this.combsArr)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
@@ -193,24 +183,29 @@ class Player {
  * Begin the game with player one
  */
 class GameBoard {
-    constructor(player1,player2){
-        this.player1 = new Player(1,'X', true);
-        this.player2= new Player(1,'O', false);
+    constructor(symbols) {
+        this.players = [];
+        for (let i = 0; i < symbols.length; i++)
+            this.players[i] = new Player(symbols[i]);
+        this.players[0].isTurn = true;
         this.gameStatus = true;
+        this.index = 0;
     }
-    switchTurn() {
-        this.player1.play()
-        this.player2.play()
-    }
+  
     isGameOver() {
-        if (this.gameStatus && (this.getGameClicks() >=9))
+        if (this.gameStatus && (this.getGameClicks() >= 9))
             return true;
         else
-            return false;            
-
+            return false;
     }
-    getGameClicks(){
-        return this.player1.getClickCnt() + this.player2.getClickCnt();
+    getGameClicks() {
+        let sum =0;
+        this.players.forEach((one) =>{ sum += one.getClickCnt();
+        });
+        return sum;
+    }
+    getPlayer(index) {
+        return this.players[index];
     }
 }
 gameInit();
