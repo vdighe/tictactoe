@@ -24,6 +24,7 @@ let player1 ;
 let player2 ;
 
 let gameStatus = false;
+let gameBoard;
 
 function gameInit() {
     console.log('Welcome to Tic tac Toe 9000');
@@ -35,11 +36,7 @@ function gameInit() {
     });
     gameStatus = true;
     document.querySelector("#reset").addEventListener('click', onReset);
-    player1 = new Player(1, 'X');
-    player2 = new Player(2, 'O');
-    player1.isTurn = ((Math.floor(Math.random() * 2)===1)?true:false);
-    player2.isTurn = !player1.isTurn;
-    console.log(`Player1's turn(${player1.isTurn}), Player2's turn (${player2.isTurn})`);
+    gameBoard = new GameBoard();
 }
 
 
@@ -49,23 +46,22 @@ function gameInit() {
  */
 function resetGame() {
 
-    player1Arr.splice(0, player1Arr.length);
-    player2Arr.splice(0, player2Arr.length);
+    gameBoard.player1.clicksArr.splice(0, gameBoard.player1.clicksArr.length);
+    gameBoard.player2.clicksArr.splice(0, gameBoard.player2.clicksArr.length);
+ 
     document.querySelectorAll(".square").forEach((square) => {
         square.innerText = '';
     });
 }
 
 function disableGame() {
-
     document.querySelectorAll(".square").forEach((square) => {
         square.style.pointerEvents = 'none';
     });
 }
 
 function switchTurn() {
-    player1.play()
-    player2.play()
+    gameBoard.switchTurn();
 }
 
 /**
@@ -87,11 +83,9 @@ function subset(arra, arra_size=MAXCNT) {
         } while (i--);
         if (result.length === arra_size) {
             result.sort();
-            console.log(result);
             result_set.push(result);
         }
     }
-    console.log(result_set);
     return result_set;
 }
 /**
@@ -126,40 +120,40 @@ function isWinner(array) {
  * @param {*} event 
  */
 function onSquareClick(event) {    
+
+    let square= event.target;
     
-    if ((this.gameStatus === true)|| (event.target.innerText === null) || (event.target.innerText === '')) {
-        if (player1.isTurn) {
-            event.target.innerText = player1.symbol;
-            console.log(document.querySelector('#gameInfo #gameTurn').classList);
+    if ((gameBoard.gameStatus === true)|| (square.innerText === null) || (square.innerText === '')) {
+        if (gameBoard.player1.isTurn) {
+            square.classList.add(gameBoard.player1.symbol);
+            square.innerText = gameBoard.player1.symbol;
             document.querySelector('#gameInfo #gameTurn').classList.remove('x');
             document.querySelector('#gameInfo #gameTurn').classList.add('o');
-            player1Arr.push(parseInt(event.target.id));
-            if (player1Arr.length >= 3) {
-                player1Combs = subset(player1Arr, 3);            
-                if (isWinner(player1Combs)){
+            gameBoard.player1.clicksArr.push(parseInt(event.target.id));
+            if (gameBoard.player1.clicksArr.length >= 3) {
+                gameBoard.player1.combsArr = subset(gameBoard.player1.clicksArr, 3);            
+                if (isWinner(gameBoard.player1.combsArr)){
                     console.log ('Player 1 wins');
-                    player1.isWinner=true;
+                    gameBoard.player1.isWinner=true;
                     console.log(document.querySelector('#gameMessages .player-x-win'));
                     document.querySelector('#gameMessages').classList.add('player-x-win');
-                    this.gameStatus =false;
+                    gameBoard.gameStatus =false;
                     disableGame();
                 }
-               // console.log(`Player1 ${player1Arr} ${player1Combs} `);
             }
-        }
-        else if (player2.isTurn) {
-            event.target.innerText = player2.symbol;
+        } else if (gameBoard.player2.isTurn) {
+            square.classList.add(gameBoard.player2.symbol);
+            square.innerText = gameBoard.player2.symbol;
             document.querySelector('#gameInfo #gameTurn').classList.remove('o');
             document.querySelector('#gameInfo #gameTurn').classList.add('x');
-            player2Arr.push(parseInt(event.target.id));
-            if (player2Arr.length >= 3) {
-                player2Combs = subset(player2Arr, 3);
-                console.log(`Player2 ${player2Arr} ${player2Combs}`);
+            gameBoard.player2.clicksArr.push(parseInt(event.target.id));
+            if (gameBoard.player2.clicksArr.length >= 3) {
+                gameBoard.player2.combsArr = subset(gameBoard.player2.clicksArr, 3);
              
-                if (isWinner(player2Combs)){
-                    player2.isWinner=true;
+                if (isWinner(gameBoard.player2.combsArr)){
+                    gameBoard.player2.isWinner=true;
                     document.querySelector('#gameMessages').classList.add('player-o-win');
-                    this.gameStatus =false;
+                    gameBoard.gameStatus =false;
                     disableGame();
                 }
                 
@@ -167,10 +161,9 @@ function onSquareClick(event) {
         }
         switchTurn();
     }
-
     //console.log(`After every click ${gameStatus} Player 1(${player1Arr.length}) Player 2(${player2Arr.length})`);
-    if (gameStatus && (player1Arr.length + player2Arr.length >=9)) {
-        gameStatus = false;
+    if (gameBoard.isGameOver()) {
+        gameBoard.gameStatus = false;
         document.querySelector('#gameMessages').classList.add('draw');
         disableGame();
    }
@@ -185,9 +178,14 @@ class Player {
         this.symbol = symbol;
         this.isTurn = isTurn;
         this.isWinner = false;
+        this.clicksArr = [];
+        this.combsArr = [];
     }
     play() {
         this.isTurn = !this.isTurn;
+    }
+    getClickCnt(){
+        return this.clicksArr.length;
     }
 }
 
@@ -195,9 +193,24 @@ class Player {
  * Begin the game with player one
  */
 class GameBoard {
+    constructor(player1,player2){
+        this.player1 = new Player(1,'X', true);
+        this.player2= new Player(1,'O', false);
+        this.gameStatus = true;
+    }
+    switchTurn() {
+        this.player1.play()
+        this.player2.play()
+    }
+    isGameOver() {
+        if (this.gameStatus && (this.getGameClicks() >=9))
+            return true;
+        else
+            return false;            
 
-
+    }
+    getGameClicks(){
+        return this.player1.getClickCnt() + this.player2.getClickCnt();
+    }
 }
-
-
 gameInit();
