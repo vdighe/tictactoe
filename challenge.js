@@ -15,9 +15,17 @@ const WINNING_COMBINATION= [[1, 2, 3],
 [3, 5, 7]];
 const player1Arr = []
 const player2Arr = []
-const MAXCNT=3;
 
-function init() {
+let player1Combs =[];
+let player2Combs =[];
+
+const MAXCNT=3;
+let player1 ;
+let player2 ;
+
+let gameStatus = false;
+
+function gameInit() {
     console.log('Welcome to Tic tac Toe 9000');
     let buttonAll = document.querySelectorAll(".square");
     console.log(buttonAll);
@@ -25,23 +33,16 @@ function init() {
     buttonAll.forEach((button) => {
         button.addEventListener('click', onSquareClick);
     });
+    gameStatus = true;
     document.querySelector("#reset").addEventListener('click', onReset);
+    player1 = new Player(1, 'X');
+    player2 = new Player(2, 'O');
+    player1.isTurn = ((Math.floor(Math.random() * 2)===1)?true:false);
+    player2.isTurn = !player1.isTurn;
+    console.log(`Player1's turn(${player1.isTurn}), Player2's turn (${player2.isTurn})`);
 }
-init();
-let numberOfPlayers = 2;
-let currentPlayer = 0;
 
-class Player {
-    constructor(id, symbol, isTurn = false) {
-        this.id = id;
-        this.symbol = symbol;
-        this.isTurn = isTurn;
-        this.isWinner = false;
-    }
-    play() {
-        this.isTurn = !this.isTurn;
-    }
-}
+
 
 /**
  * Reset the game
@@ -53,7 +54,13 @@ function resetGame() {
     document.querySelectorAll(".square").forEach((square) => {
         square.innerText = '';
     });
+}
 
+function disableGame() {
+
+    document.querySelectorAll(".square").forEach((square) => {
+        square.style.pointerEvents = 'none';
+    });
 }
 
 function switchTurn() {
@@ -61,6 +68,12 @@ function switchTurn() {
     player2.play()
 }
 
+/**
+ * Bring maximum combinations of players 
+ * in the array of 3's
+ * @param {*} arra 
+ * @param {*} arra_size 
+ */
 function subset(arra, arra_size=MAXCNT) {
     let result_set = [],
         result;
@@ -108,15 +121,18 @@ function isWinner(array) {
     return false;
 }
 
-let player1Combs =[];
-let player2Combs =[];
-
+/**
+ * User should be allowed to play only when the game is to begin.
+ * @param {*} event 
+ */
 function onSquareClick(event) {    
     
-    if ((event.target.innerText === null) || (event.target.innerText === '')) {
+    if ((this.gameStatus === true)|| (event.target.innerText === null) || (event.target.innerText === '')) {
         if (player1.isTurn) {
             event.target.innerText = player1.symbol;
-            event.target.classList.add('p1');
+            console.log(document.querySelector('#gameInfo #gameTurn').classList);
+            document.querySelector('#gameInfo #gameTurn').classList.remove('x');
+            document.querySelector('#gameInfo #gameTurn').classList.add('o');
             player1Arr.push(parseInt(event.target.id));
             if (player1Arr.length >= 3) {
                 player1Combs = subset(player1Arr, 3);            
@@ -125,15 +141,16 @@ function onSquareClick(event) {
                     player1.isWinner=true;
                     console.log(document.querySelector('#gameMessages .player-x-win'));
                     document.querySelector('#gameMessages').classList.add('player-x-win');
-                    //document.querySelector('#gameMessages .player-x-win').innerHTML="Player 1 wins"
-                    //resetGame();  
+                    this.gameStatus =false;
+                    disableGame();
                 }
                // console.log(`Player1 ${player1Arr} ${player1Combs} `);
             }
         }
         else if (player2.isTurn) {
             event.target.innerText = player2.symbol;
-            event.target.classList.add('p2');
+            document.querySelector('#gameInfo #gameTurn').classList.remove('o');
+            document.querySelector('#gameInfo #gameTurn').classList.add('x');
             player2Arr.push(parseInt(event.target.id));
             if (player2Arr.length >= 3) {
                 player2Combs = subset(player2Arr, 3);
@@ -142,8 +159,8 @@ function onSquareClick(event) {
                 if (isWinner(player2Combs)){
                     player2.isWinner=true;
                     document.querySelector('#gameMessages').classList.add('player-o-win');
-                   // document.querySelector('#gameMessages player-o-win').innerHTML='Player 2 wins';
-                    //resetGame();  
+                    this.gameStatus =false;
+                    disableGame();
                 }
                 
             }
@@ -151,16 +168,36 @@ function onSquareClick(event) {
         switchTurn();
     }
 
+    //console.log(`After every click ${gameStatus} Player 1(${player1Arr.length}) Player 2(${player2Arr.length})`);
+    if (gameStatus && (player1Arr.length + player2Arr.length >=9)) {
+        gameStatus = false;
+        document.querySelector('#gameMessages').classList.add('draw');
+        disableGame();
+   }
 }
 
 function onReset(event) {
     resetGame();   
 }
+class Player {
+    constructor(id, symbol, isTurn = false) {
+        this.id = id;
+        this.symbol = symbol;
+        this.isTurn = isTurn;
+        this.isWinner = false;
+    }
+    play() {
+        this.isTurn = !this.isTurn;
+    }
+}
+
 /**
  * Begin the game with player one
  */
+class GameBoard {
 
-let player1 = new Player(1, 'X');
-let player2 = new Player(2, '0');
 
-player1.isTurn = true;
+}
+
+
+gameInit();

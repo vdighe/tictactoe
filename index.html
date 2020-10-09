@@ -10,24 +10,25 @@
 
 <body>
     <div class="container">
-        <h1>Tic-Tac-Toe</h1>
-        <ul id="gameBoard">
-            <!-- first row -->
-            <li data-pos="0,0" class="square" id="1"></li>
-            <li data-pos="0,1" class="square" id="2"></li>
-            <li data-pos="0,2" class="square" id="3"></li>
-            <!-- second row -->
-            <li data-pos="1,0" class="square" id="4"></li>
-            <li data-pos="1,1" class="square" id="5"></li>
-            <li data-pos="1,2" class="square" id="6"></li>
-            <!-- third row -->
-            <li data-pos="2,0" class="square" id="7"></li>
-            <li data-pos="2,1" class="square" id="8"></li>
-            <li data-pos="2,2" class="square" id="9"></li>
-        </ul>
+        <form class="tictactoe">
+            <h1>Tic-Tac-Toe</h1>
+            <ul id="gameBoard">
+                <!-- first row -->
+                <li data-pos="0,0" class="square" id="1"></li>
+                <li data-pos="0,1" class="square" id="2"></li>
+                <li data-pos="0,2" class="square" id="3"></li>
+                <!-- second row -->
+                <li data-pos="1,0" class="square" id="4"></li>
+                <li data-pos="1,1" class="square" id="5"></li>
+                <li data-pos="1,2" class="square" id="6"></li>
+                <!-- third row -->
+                <li data-pos="2,0" class="square" id="7"></li>
+                <li data-pos="2,1" class="square" id="8"></li>
+                <li data-pos="2,2" class="square" id="9"></li>
+            </ul>
 
-        <button id="reset">Play Again?</button>
-
+            <button id="reset">Play Again?</button>
+        </form>
         <!-- Game Messages -->
         <div id="gameMessages">
             <span class="player-x-win">Player One Wins</span>
@@ -35,16 +36,15 @@
             <span class="draw">Draw Game</span>
         </div>
 
-        <aside id="nfo">
-            <!--
-            <h2>Turn Keeper</h2>
-            <div id="turn-keeper" class="x">
+        <aside id="gameInfo">
+            <h2>Next Turn</h2>
+            <div id="gameTurn" class="x">
                 <span class="x">Player 1</span>
                 <span class="o">Player 2</span>
             </div>
--->
+
             <h2>Game Score</h2>
-            <div id="score">
+            <div id="gameScore">
                 Player 1: <span id="player-one-score">0</span> <br />
                 Player 2: <span id="player-two-score">0</span> <br />
             </div>

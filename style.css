@@ -72,20 +72,6 @@ body {
     margin-top: 10px;
 }
 
-#turn-keeper > span,
-#game-messages > span {
-    display: none;
-}
-
-#turn-keeper.x span.x,
-#turn-keeper.o span.o, 
-#game-messages.player-x-win > span.player-x-win, 
-#game-messages.player-o-win > span.player-o-win,
-#game-messages.draw > span.draw {
-    display: block;
-    margin-top: 10px;
-}
-
 #reset {
     text-align: center;
         border: none;
@@ -106,19 +92,34 @@ body {
 }
 
 
-#gameMessages > span {
+#gameStatus > span {
     display: none;
 }
 
-
-#gameMessages.player-one-scor > span.player-x-win, 
-#gameMessages.player-o-win > span.player-o-win,
-#gameMessages.draw > span.draw {
+/*
+#gameStatus.player-one-score > span.player-x-win, 
+#gameStatus.player-two-score > span.player-o-win,
+#gameStatus.draw > span.draw {
     display: grid;
     margin-top: 10px;
     align-content: end;
 }
+*/
 .box {
   display: flex;
   align-items: stretch;
+}
+
+#gameTurn > span,
+#gameMessages > span {
+    display: none;
+}
+
+#gameTurn.x span.x,
+#gameTurn.o span.o, 
+#gameMessages.player-x-win > span.player-x-win, 
+#gameMessages.player-o-win > span.player-o-win,
+#gameMessages.draw > span.draw {
+    display: block;
+    margin-top: 10px;
 }
