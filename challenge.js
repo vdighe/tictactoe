@@ -17,7 +17,7 @@ let symbols = ['x', 'o'];
 let gameBoard;
 let turns;
 const SCORE = { 'x': 0, 'o': 0 };
-
+const WINNER_HORN = new Audio('./TicTacToe.mp3');
 /**
  * Update the score based on localStore and then update UI
  */
@@ -25,6 +25,15 @@ const SCORE = { 'x': 0, 'o': 0 };
 function updateScoreBoard(winner) {
     let newScore = JSON.parse(sessionStorage.getItem('score'));
     newScore[winner] = newScore[winner] + 1;
+
+    /*
+     * More than three times. then blow the horn and reset the score
+     */
+    if (newScore[winner]  === 3) {
+        WINNER_HORN.play();
+        newScore[winner] =0;
+    }
+
     sessionStorage.setItem('score', JSON.stringify(newScore));
     updateScore();
 }
