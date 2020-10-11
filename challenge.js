@@ -16,8 +16,30 @@ const WINNING_COMBINATION = [[1, 2, 3],
 let symbols = ['x', 'o'];
 let gameBoard;
 let turns;
+const SCORE = { 'x': 0, 'o': 0 };
 
+/**
+ * Update the score based on localStore and then update UI
+ */
+
+function updateScoreBoard(winner) {
+    let newScore = JSON.parse(sessionStorage.getItem('score'));
+    newScore[winner] = newScore[winner] + 1;
+    sessionStorage.setItem('score', JSON.stringify(newScore));
+    updateScore();
+}
+/**
+ * Update the score for UI
+ */
+function updateScore() {
+    document.querySelector(`#gameScore #player-x-score`).innerHTML =
+        JSON.parse(sessionStorage.getItem('score')).x;
+    document.querySelector(`#gameScore #player-o-score`).innerHTML =
+        JSON.parse(sessionStorage.getItem('score')).o;
+
+}
 function gameInit() {
+
     console.log('Welcome to Tic tac Toe 9000');
     let buttonAll = document.querySelectorAll(".square");
     turns = 0;
@@ -25,6 +47,10 @@ function gameInit() {
         button.addEventListener('click', onSquareClick);
     });
     document.querySelector("#reset").addEventListener('click', onReset);
+    if (sessionStorage.getItem('score') === null)
+        sessionStorage.setItem('score', JSON.stringify(SCORE));
+
+    updateScore();
     gameBoard = new GameBoard(symbols);
 }
 
@@ -32,6 +58,7 @@ function gameInit() {
  * Reset the game
  */
 function resetGame() {
+    updateScore();
     gameBoard.players.forEach((one) => {
         let len = one.clicksArr.length;
         one.clicksArr.splice(0, len);
@@ -40,6 +67,7 @@ function resetGame() {
     document.querySelectorAll(".square").forEach((square) => {
         square.innerText = '';
     });
+
 }
 
 function disableGame() {
@@ -103,9 +131,8 @@ function isInWinArray(array) {
     return false;
 }
 
-function checkSquare(ele){
-    let ret = (gameBoard.gameStatus) || (ele.innerText === null) || (ele.innerText === '')? true:false;
-    console.log(`checkSqure ${ret}`);
+function checkSquare(ele) {
+    let ret = (gameBoard.gameStatus) || (ele.innerText === null) || (ele.innerText === '') ? true : false;
     return (ele)
 }
 /**
@@ -116,28 +143,30 @@ function onSquareClick(event) {
 
     let square = event.target;
     let player = gameBoard.getPlayer(turns);
-    console.log(player);
-    let className ='';
+    let className = '';
     turns = (++turns % 2);
-    console.log(turns);
     let nextPlayer = gameBoard.getPlayer(turns);
-    console.log(nextPlayer);
+
     /**
      * Check if the game is on and the blank square
      */
     if (checkSquare(square)) {
-        if(player.isTurn){
+        if (player.isTurn) {
             player.play();
             square.classList.add(player.symbol);
             square.innerText = player.symbol;
             document.querySelector('#gameInfo #gameTurn').classList.remove(player.symbol);
             document.querySelector('#gameInfo #gameTurn').classList.add(nextPlayer.symbol);
             player.clicksArr.push(parseInt(event.target.id));
-            if (player.isWinner()){
-                className = `player-${player.symbol}-win`;
-                console.log(`${className}`);;
-                document.querySelector('#gameMessages').classList.add(className);
-                console.log(document.querySelector('#gameMessages'));
+            if (player.isWinner()) {
+                updateScoreBoard(player.symbol);
+
+                document.querySelector('#gameMessages').classList.add(`player-${player.symbol}-win`);
+                /**
+                 * Make it flash flash
+                 */
+                document.querySelector('#gameMessages').classList.add('flash');
+
                 gameBoard.gameStatus = false;
                 disableGame();
             }
@@ -191,7 +220,7 @@ class GameBoard {
         this.gameStatus = true;
         this.index = 0;
     }
-  
+
     isGameOver() {
         if (this.gameStatus && (this.getGameClicks() >= 9))
             return true;
@@ -199,8 +228,9 @@ class GameBoard {
             return false;
     }
     getGameClicks() {
-        let sum =0;
-        this.players.forEach((one) =>{ sum += one.getClickCnt();
+        let sum = 0;
+        this.players.forEach((one) => {
+            sum += one.getClickCnt();
         });
         return sum;
     }

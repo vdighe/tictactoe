@@ -54,17 +54,7 @@ body {
     font-size: 60px;
     color: #313031;
 }
-/*
-#gameBoard > li.X {
-    font-size: 40px;
-    color: #ed4e6e
-}
 
-#gameBoard > li.O {
-    font-size: 40px;
-    color: #485b6e;
-}
-*/
 #gameBoard > li:hover {
     background: #f9f9f9;
 }
@@ -104,15 +94,15 @@ body {
     display: none;
 }
 
-/*
-#gameStatus.player-one-score > span.player-x-win, 
-#gameStatus.player-two-score > span.player-o-win,
+
+#gameScore.player-x-score > span.player-x-win, 
+#gameScore.player-o-score > span.player-o-win,
 #gameStatus.draw > span.draw {
     display: grid;
     margin-top: 10px;
     align-content: end;
 }
-*/
+
 .box {
   display: flex;
   align-items: stretch;
@@ -130,6 +120,32 @@ body {
 #gameMessages.draw > span.draw {
     display: block;
     margin-top: 10px;
+    color:red;
+    font-size: 20px
 }
 
+.flash {
+    animation-name: flash;
+     animation-duration: 0.2s;
+     animation-timing-function: linear;
+     animation-iteration-count: 10;
+     animation-direction: alternate;
+     animation-play-state: running;
+ }
+ /*
+ @keyframes flash {
+    from {color: red;}
+    to {color: black;}
+}*/
 
+@keyframes flash { 
+    0% { 
+        opacity: 0; 
+    } 
+    50% { 
+        opacity: 0.7; 
+    } 
+    100% { 
+        opacity: 0; 
+    } 
+} 
