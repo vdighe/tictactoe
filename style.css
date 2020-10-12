@@ -115,14 +115,17 @@ body {
 
 #gameTurn.x span.x,
 #gameTurn.o span.o, 
+#gameTurn.t span.t, 
 #gameMessages.player-x-win > span.player-x-win, 
 #gameMessages.player-o-win > span.player-o-win,
+#gameMessages.player-max-wins > span.player-max-wins,
 #gameMessages.draw > span.draw {
     display: block;
     margin-top: 10px;
     color:red;
     font-size: 20px
 }
+
 
 .flash {
     animation-name: flash;
