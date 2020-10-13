@@ -12,6 +12,16 @@
     <div class="container">
         <form class="tictactoe">
             <h1>Tic-Tac-Toe</h1>
+
+            <div class="gameOptions">
+            <!--h2>Play Against</h2-->    
+            <fieldset>
+                <label class="container">Options
+                    <input type="radio" name="option" value="0"  onclick="OnClickOption(this)">Computer 
+                    <input type="radio" name="option" value="1" onclick="OnClickOption(this)">Human      
+                </label>
+            </fieldset>
+            </div>
             <ul id="gameBoard">
                 <!-- first row -->
                 <li data-pos="0,0" class="square" id="0"></li>

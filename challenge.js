@@ -18,8 +18,11 @@ let gameBoard;
 let turns;
 const SCORE = { 'x': 0, 'o': 0 };
 const WINNER_HORN = new Audio('./TicTacToe.mp3');
-let gameData  = new Array(9);
-
+let gameData = new Array(9);
+/*
+* Means Computer;
+*/
+let playOption = 0;
 /**
  * Update the score based on localStore and then update UI
  */
@@ -31,9 +34,9 @@ function updateScoreBoard(winner) {
     /*
      * More than three times. then blow the horn and reset the score
      */
-    if (newScore[winner]  === 3) {
+    if (newScore[winner] === 3) {
         WINNER_HORN.play();
-        newScore[winner] =0;
+        newScore[winner] = 0;
     }
     sessionStorage.setItem('score', JSON.stringify(newScore));
     updateScore();
@@ -48,11 +51,30 @@ function updateScore() {
         JSON.parse(sessionStorage.getItem('score')).o;
 
 }
+function OnClickOption(radio) {
+    playOption = radio.value;
+    // inject the checked value
+    const optionValue = document.querySelector('.gameOptions');
+
+    let fieldset = document.querySelector('fieldset');
+
+    fieldset.style.display = 'none';
+    playOption = document.querySelector("input[name=option]:checked").value;
+
+    fieldset.style.display = 'none';
+    let h2Ele = document.createElement('h2');
+    h2Ele.innerHTML = 'Play Against '+ ((playOption == 0)?'Computer ':'Human');
+    optionValue.appendChild(h2Ele);
+
+    //fieldSet.classList.add("game-on");
+}
+
 function gameInit() {
 
     console.log('Welcome to Tic tac Toe 2020');
     let buttonAll = document.querySelectorAll(".square");
     turns = 0;
+
     buttonAll.forEach((button) => {
         button.addEventListener('click', onSquareClick);
     });
@@ -68,7 +90,7 @@ function gameInit() {
  */
 function resetGame() {
     updateScore();
-    gameBoard.resetGame();    
+    gameBoard.resetGame();
     document.querySelectorAll(".square").forEach((square) => {
         square.innerText = '';
     });
@@ -80,7 +102,6 @@ function disableGame() {
         square.style.pointerEvents = 'none';
     });
 }
-
 
 /**
  * Bring maximum combinations of players 
@@ -139,17 +160,17 @@ function checkSquare(ele) {
 }
 
 // GET EMPTY SPACES
-function getEmptySpaces(gameData){
+function getEmptySpaces(gameData) {
     let EMPTY = [];
-    for( let id = 0; id < gameData.length; id++){
-        if(!gameData[id]) EMPTY.push(id);
+    for (let id = 0; id < gameData.length; id++) {
+        if (!gameData[id]) EMPTY.push(id);
     }
     return EMPTY;
 }
 
- /**
-  * check for a winner
-     const WINNING_COMBINATION = [[0, 1, 2],
+/**
+ * check for a winner
+    const WINNING_COMBINATION = [[0, 1, 2],
 [3, 4, 5],
 [6, 7, 8],
 [0, 3, 6],
@@ -157,50 +178,50 @@ function getEmptySpaces(gameData){
 [2, 5, 8],
 [0, 4, 8],
 [2, 4, 6]];
-  */
- function isWinner(gameData, player){
-    for(let i = 0; i < WINNING_COMBINATION.length; i++){
+ */
+function isWinner(gameData, player) {
+    for (let i = 0; i < WINNING_COMBINATION.length; i++) {
         let won = true;
-        for(let j = 0; j < WINNING_COMBINATION[i].length; j++){
+        for (let j = 0; j < WINNING_COMBINATION[i].length; j++) {
             let id = WINNING_COMBINATION[i][j];
             won = gameData[id] == player && won;
         }
-        if(won){
+        if (won) {
             return true;
         }
     }
     return false;
 }
 // Check for a tie game
-function isTie(gameData){
+function isTie(gameData) {
     let isBoardFill = true;
-    for(let i = 0; i < gameData.length; i++){
+    for (let i = 0; i < gameData.length; i++) {
         isBoardFill = gameData[i] && isBoardFill;
     }
-    if(isBoardFill){
+    if (isBoardFill) {
         return true;
     }
     return false;
 }
 
 // MINIMAX
-function minimax(gameData, PLAYER){
+function minimax(gameData, PLAYER) {
     // BASE
-    
-    if ( isWinner(gameData, symbols[0])) return { evaluation : -10};
-    if ( isWinner(gameData, symbols[1])) return { evaluation : +10};
-    if ( isTie(gameData))  return {evaluation :0};
-  
+
+    if (isWinner(gameData, symbols[0])) return { evaluation: -10 };
+    if (isWinner(gameData, symbols[1])) return { evaluation: +10 };
+    if (isTie(gameData)) return { evaluation: 0 };
+
     // LOOK FOR EMPTY SPACES
-    let EMPTY_SPACES = getEmptySpaces(gameData); 
+    let EMPTY_SPACES = getEmptySpaces(gameData);
 
     // SAVE ALL MOVES AND THEIR EVALUATIONS
     let moves = [];
     // LOOP OVER THE EMPTY SPACE TO EVALUATE
-    for (let i=0; i < EMPTY_SPACES.length; i++){
+    for (let i = 0; i < EMPTY_SPACES.length; i++) {
         let id = EMPTY_SPACES[i];
         let backup = gameData[id];
-        gameData[id]=PLAYER;
+        gameData[id] = PLAYER;
 
         let move = {}
         move.id = id;
@@ -218,20 +239,20 @@ function minimax(gameData, PLAYER){
 
     }
     let bestMove;
-    if(PLAYER === symbols[1]){
+    if (PLAYER === symbols[1]) {
         // MAXIMIZER
         let bestEvaluation = -Infinity;
-        for(let i = 0; i < moves.length; i++){
-            if( moves[i].evaluation > bestEvaluation ){
+        for (let i = 0; i < moves.length; i++) {
+            if (moves[i].evaluation > bestEvaluation) {
                 bestEvaluation = moves[i].evaluation;
                 bestMove = moves[i];
             }
         }
-    }else{
+    } else {
         // MINIMIZER
         let bestEvaluation = +Infinity;
-        for(let i = 0; i < moves.length; i++){
-            if( moves[i].evaluation < bestEvaluation ){
+        for (let i = 0; i < moves.length; i++) {
+            if (moves[i].evaluation < bestEvaluation) {
                 bestEvaluation = moves[i].evaluation;
                 bestMove = moves[i];
             }
@@ -248,10 +269,13 @@ function drawOnBoard(square, player) {
     square.classList.add(player.symbol);
     square.innerText = player.symbol;
     square.style.pointerEvents = 'none';
-    /*ADD SYMBOL
+
+    // Remove item 'seven' from array
+    let nextSymbol = symbols.filter((e) => { return e !== player.symbol })
+
+    /*ADD SYMBOL  */
     document.querySelector('#gameInfo #gameTurn').classList.remove(player.symbol);
-    document.querySelector('#gameInfo #gameTurn').classList.add(nextPlayer.symbol);
-    */
+    document.querySelector('#gameInfo #gameTurn').classList.add(nextSymbol);
     player.clicksArr.push(parseInt(square.id));
 }
 /**
@@ -262,15 +286,15 @@ function onSquareClick(event) {
     let className = '';
     let square = event.target;
 
-    let player = gameBoard.getPlayer(turns);      
-    let computer = gameBoard.getPlayer((turns+1 % 2));
+    let player = gameBoard.getPlayer(turns);
+    let computer = gameBoard.getPlayer((turns + 1 % 2));
 
     if (!gameBoard.gameStatus)
         return;
     if (gameData[square.id])
         return;
     if (!gameBoard.isBoardFull() && gameData[square.id] !== null)
-        gameData[square.id] = player.symbol;            
+        gameData[square.id] = player.symbol;
     drawOnBoard(square, player);
     if (player.isWinner()) {
         updateScoreBoard(player.symbol);
@@ -282,7 +306,7 @@ function onSquareClick(event) {
         gameBoard.gameStatus = false;
         disableGame();
         return;
-    } 
+    }
     /**
      * Check if the game is a draw
      */
@@ -296,26 +320,30 @@ function onSquareClick(event) {
         return;
     }
 
-    /**
-     * Otherwise let computer play
-     */
-    let id = minimax( gameData, computer.symbol).id;
-    gameData[id] = computer.symbol;
-    let nextSquare = document.querySelectorAll('.square')[id];
-
-    drawOnBoard(nextSquare, computer);
-    if (computer.isWinner()) {
-
-        updateScoreBoard(computer.symbol);
-        document.querySelector('#gameMessages').classList.add(`player-${computer.symbol}-win`);
+    if (playOption == 0) {
         /**
-         * Make it flash flash
+         * Otherwise let computer play
          */
-        document.querySelector('#gameMessages').classList.add('flash');
-        gameBoard.gameStatus = false;
-        disableGame();
-        return;
-    }    
+        let id = minimax(gameData, computer.symbol).id;
+        gameData[id] = computer.symbol;
+        let nextSquare = document.querySelectorAll('.square')[id];
+
+        drawOnBoard(nextSquare, computer);
+        if (computer.isWinner()) {
+
+            updateScoreBoard(computer.symbol);
+            document.querySelector('#gameMessages').classList.add(`player-${computer.symbol}-win`);
+            /**
+             * Make it flash flash
+             */
+            document.querySelector('#gameMessages').classList.add('flash');
+            gameBoard.gameStatus = false;
+            disableGame();
+            return;
+        }
+    } else {
+        turns = (++turns % 2);
+    }
 }
 
 function onReset(event) {
@@ -379,13 +407,13 @@ class GameBoard {
             return false;
     }
     getGameClicks() {
-        let sum = this.playerX.getClickCnt() 
-                    + this.playerO.getClickCnt();
+        let sum = this.playerX.getClickCnt()
+            + this.playerO.getClickCnt();
         return sum;
     }
 
     getPlayer(index) {
-          return ((index === 0)? this.playerX : this.playerO);
+        return ((index === 0) ? this.playerX : this.playerO);
     }
     resetGame() {
         this.playerX.reset();
