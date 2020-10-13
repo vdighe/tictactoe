@@ -17,7 +17,7 @@ let symbols = ['x', 'o'];
 let gameBoard;
 let turns;
 const SCORE = { 'x': 0, 'o': 0 };
-const WINNER_HORN = new Audio('./TicTacToe.mp3');
+const WINNER_HORN = new Audio('./extras/TicTacToe.mp3');
 let gameData = new Array(9);
 /*
 * Means Computer;
