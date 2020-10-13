@@ -13,18 +13,24 @@ const WINNING_COMBINATION = [[0, 1, 2],
 [2, 5, 8],
 [0, 4, 8],
 [2, 4, 6]];
-let symbols = ['x', 'o'];
-let gameBoard;
-let turns;
+
 const SCORE = { 'x': 0, 'o': 0 };
 const WINNER_HORN = new Audio('./extras/TicTacToe.mp3');
-let gameData = new Array(9);
+const SYMBOLS = ['x', 'o'];
 /*
-* Means Computer;
+ * 3 X 3 Grid to keep track of the game
+ */
+let gameData = new Array(9);
+let gameBoard;
+let turns;
+
+/*
+* 0 ==> Means Computer;
+* 1 ==> Means Human;
 */
 let playOption = 0;
 /**
- * Update the score based on localStore and then update UI
+ * Update the score based on sessionStorage and then update UI
  */
 
 function updateScoreBoard(winner) {
@@ -51,6 +57,10 @@ function updateScore() {
         JSON.parse(sessionStorage.getItem('score')).o;
 
 }
+/**
+ * Check what option user has chosen.
+ * @param {Radio Buttom} radio 
+ */
 function OnClickOption(radio) {
     playOption = radio.value;
     // inject the checked value
@@ -63,27 +73,12 @@ function OnClickOption(radio) {
 
     fieldset.style.display = 'none';
     let h2Ele = document.createElement('h2');
-    h2Ele.innerHTML = 'Play Against '+ ((playOption == 0)?'Computer ':'Human');
+    h2Ele.innerHTML = 'Play Against ' + ((playOption == 0) ? 'Computer ' : 'Human');
     optionValue.appendChild(h2Ele);
 
     //fieldSet.classList.add("game-on");
 }
 
-function gameInit() {
-
-    console.log('Welcome to Tic tac Toe 2020');
-    let buttonAll = document.querySelectorAll(".square");
-    turns = 0;
-
-    buttonAll.forEach((button) => {
-        button.addEventListener('click', onSquareClick);
-    });
-    document.querySelector("#reset").addEventListener('click', onReset);
-    if (sessionStorage.getItem('score') === null)
-        sessionStorage.setItem('score', JSON.stringify(SCORE));
-    updateScore();
-    gameBoard = new GameBoard(symbols);
-}
 
 /**
  * Reset the game
@@ -94,9 +89,11 @@ function resetGame() {
     document.querySelectorAll(".square").forEach((square) => {
         square.innerText = '';
     });
-
 }
 
+/**
+ * When the game is won, or drawn, disable the clicks
+ */
 function disableGame() {
     document.querySelectorAll(".square").forEach((square) => {
         square.style.pointerEvents = 'none';
@@ -105,7 +102,8 @@ function disableGame() {
 
 /**
  * Bring maximum combinations of players 
- * in the array of 3's
+ * in the array of 3's based on what an user
+ * has played so far.
  * @param {*} arra 
  * @param {*} arra_size 
  */
@@ -127,6 +125,7 @@ function subset(arra, arra_size) {
     }
     return result_set;
 }
+
 /**
  * Check if two arrays are exactly equal
  * @param {Array} a 
@@ -144,7 +143,6 @@ function arrayEquals(a, b) {
  * @param {*} array 
  */
 function isInWinArray(array) {
-
     for (let i = 0; i < array.length; i++) {
         for (let j = 0; j < WINNING_COMBINATION.length; j++) {
             if (arrayEquals(array[i], WINNING_COMBINATION[j]))
@@ -153,13 +151,18 @@ function isInWinArray(array) {
     }
     return false;
 }
-
+/** Not Used  */
 function checkSquare(ele) {
-    let ret = (gameBoard.gameStatus) || (ele.innerText === null) || (ele.innerText === '') ? true : false;
+    let ret = (gameBoard.gameStatus) || (ele.innerText === null) ||
+        (ele.innerText === '') ? true : false;
     return (ele)
 }
 
-// GET EMPTY SPACES
+/**
+ * Based on the current GameBoard, find empty spaces array
+ * 0...9 
+ * GET EMPTY SPACES
+ * */
 function getEmptySpaces(gameData) {
     let EMPTY = [];
     for (let id = 0; id < gameData.length; id++) {
@@ -169,16 +172,11 @@ function getEmptySpaces(gameData) {
 }
 
 /**
- * check for a winner
-    const WINNING_COMBINATION = [[0, 1, 2],
-[3, 4, 5],
-[6, 7, 8],
-[0, 3, 6],
-[1, 4, 7],
-[2, 5, 8],
-[0, 4, 8],
-[2, 4, 6]];
+ * isWinner: check for a winner
+ * Based on the players current game,
+ * see if it is one of the winning combination
  */
+
 function isWinner(gameData, player) {
     for (let i = 0; i < WINNING_COMBINATION.length; i++) {
         let won = true;
@@ -192,27 +190,39 @@ function isWinner(gameData, player) {
     }
     return false;
 }
-// Check for a tie game
+/**
+ * isTie
+ * Check if the game is a draw
+ * @param {*} gameData 
+ */
+
 function isTie(gameData) {
-    let isBoardFill = true;
+    let isGameBoardFull = true;
     for (let i = 0; i < gameData.length; i++) {
-        isBoardFill = gameData[i] && isBoardFill;
+        isGameBoardFull = gameData[i] && isGameBoardFull;
     }
-    if (isBoardFill) {
+    if (isGameBoardFull) {
         return true;
     }
     return false;
 }
 
-// MINIMAX
+/**
+ *  
+ * The MINIMAX algorithm to play as Computer.
+ *  
+ */
 function minimax(gameData, PLAYER) {
-    // BASE
 
-    if (isWinner(gameData, symbols[0])) return { evaluation: -10 };
-    if (isWinner(gameData, symbols[1])) return { evaluation: +10 };
+    // Return condition for the base:
+    // +10 for computer, and -10 for player
+    // if the tie, then return 0
+
+    if (isWinner(gameData, SYMBOLS[0])) return { evaluation: -10 };
+    if (isWinner(gameData, SYMBOLS[1])) return { evaluation: +10 };
     if (isTie(gameData)) return { evaluation: 0 };
 
-    // LOOK FOR EMPTY SPACES
+    // Empty Spaces
     let EMPTY_SPACES = getEmptySpaces(gameData);
 
     // SAVE ALL MOVES AND THEIR EVALUATIONS
@@ -226,20 +236,19 @@ function minimax(gameData, PLAYER) {
         let move = {}
         move.id = id;
         // THE EVALUATION
-        if (PLAYER === symbols[1]) { //Meaning computer
-            move.evaluation = minimax(gameData, symbols[0]).evaluation;
+        if (PLAYER === SYMBOLS[1]) { //Meaning computer
+            move.evaluation = minimax(gameData, SYMBOLS[0]).evaluation;
         } else {
-            move.evaluation = minimax(gameData, symbols[1]).evaluation;
+            move.evaluation = minimax(gameData, SYMBOLS[1]).evaluation;
         }
         // Restore space
         gameData[id] = backup;
 
         //Save the move
         moves.push(move);
-
     }
     let bestMove;
-    if (PLAYER === symbols[1]) {
+    if (PLAYER === SYMBOLS[1]) {
         // MAXIMIZER
         let bestEvaluation = -Infinity;
         for (let i = 0; i < moves.length; i++) {
@@ -262,7 +271,8 @@ function minimax(gameData, PLAYER) {
 }
 
 /**
- * Draw the move on board
+ * 
+ * Draw the move on the game board
  * *
  */
 function drawOnBoard(square, player) {
@@ -271,15 +281,33 @@ function drawOnBoard(square, player) {
     square.style.pointerEvents = 'none';
 
     // Remove item 'seven' from array
-    let nextSymbol = symbols.filter((e) => { return e !== player.symbol })
+    let nextSymbol = SYMBOLS.filter((e) => { return e !== player.symbol })
 
     /*ADD SYMBOL  */
     document.querySelector('#gameInfo #gameTurn').classList.remove(player.symbol);
     document.querySelector('#gameInfo #gameTurn').classList.add(nextSymbol);
     player.clicksArr.push(parseInt(square.id));
 }
+
 /**
- * User should be allowed to play only when the game is to begin.
+ * Game is a draw/tie
+ * 
+ */
+function gameDrawn() {
+
+    document.querySelector('#gameMessages').classList.add('draw');
+    // Go thru SYMBOLS array
+
+    SYMBOLS.forEach((symbol) => {
+        document.querySelector('#gameInfo #gameTurn').classList.remove(symbol);
+    })
+    //document.querySelector('#gameInfo #gameTurn').classList.remove(player.symbol);
+    //document.querySelector('#gameInfo #gameTurn').classList.remove(computer.symbol);
+    document.querySelector('#gameInfo #gameTurn').classList.add('t');
+}
+/**
+ * User should be allowed to click only when 
+ * the game is to begin.
  * @param {*} event 
  */
 function onSquareClick(event) {
@@ -308,29 +336,26 @@ function onSquareClick(event) {
         return;
     }
     /**
-     * Check if the game is a draw
+     * Check if the game is a draw, then update messages
      */
     if (gameBoard.isGameOver()) {
         gameBoard.gameStatus = false;
-        document.querySelector('#gameMessages').classList.add('draw');
-        document.querySelector('#gameInfo #gameTurn').classList.remove(player.symbol);
-        document.querySelector('#gameInfo #gameTurn').classList.remove(computer.symbol);
-        document.querySelector('#gameInfo #gameTurn').classList.add('t');
+        gameDrawn();
         disableGame();
         return;
     }
 
+     /**
+       * Opponent is computer         
+       */
     if (playOption == 0) {
-        /**
-         * Otherwise let computer play
-         */
+        //GET THE MOVE
         let id = minimax(gameData, computer.symbol).id;
         gameData[id] = computer.symbol;
+        // Get the corresponding square from UI and draw on it
         let nextSquare = document.querySelectorAll('.square')[id];
-
         drawOnBoard(nextSquare, computer);
         if (computer.isWinner()) {
-
             updateScoreBoard(computer.symbol);
             document.querySelector('#gameMessages').classList.add(`player-${computer.symbol}-win`);
             /**
@@ -352,7 +377,7 @@ function onReset(event) {
 
 
 /**
- * Begin the game with player one
+ * Begin the game with player X
  */
 class Player {
     constructor(symbol, isTurn = false) {
@@ -385,11 +410,13 @@ class Player {
     }
 }
 
-
+/**
+ * GameBoard class with two encapsulated player class
+ */
 class GameBoard {
-    constructor(symbols) {
-        this.playerX = new Player('x', true);
-        this.playerO = new Player('o', false);
+    constructor(SYMBOLS) {
+        this.playerX = new Player(SYMBOLS[0], true);
+        this.playerO = new Player(SYMBOLS[1], false);
         this.gameStatus = true;
         this.index = 0;
     }
@@ -421,4 +448,23 @@ class GameBoard {
     }
 
 }
+/**
+ * Main Function
+ */
+function gameInit() {
+
+    console.log('Welcome to Tic tac Toe 2020');
+    let buttonAll = document.querySelectorAll(".square");
+    turns = 0;
+
+    buttonAll.forEach((button) => {
+        button.addEventListener('click', onSquareClick);
+    });
+    document.querySelector("#reset").addEventListener('click', onReset);
+    if (sessionStorage.getItem('score') === null)
+        sessionStorage.setItem('score', JSON.stringify(SCORE));
+    updateScore();
+    gameBoard = new GameBoard(SYMBOLS);
+}
+// BEGINS
 gameInit();
