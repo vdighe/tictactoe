@@ -453,7 +453,7 @@ class GameBoard {
  */
 function gameInit() {
 
-    console.log('Welcome to Tic tac Toe 2020');
+    console.log('Welcome to Tic Tac Toe 2020');
     let buttonAll = document.querySelectorAll(".square");
     turns = 0;
 

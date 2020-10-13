@@ -17,8 +17,11 @@
             <!--h2>Play Against</h2-->    
             <fieldset>
                 <label class="container">Play Against
-                    <input type="radio" name="option" value="0"  onclick="OnClickOption(this)">Computer 
-                    <input type="radio" name="option" value="1" onclick="OnClickOption(this)">Human      
+                    <input type="radio" name="option" id="option-0" value="0" checked="checked" onclick="OnClickOption(this)"/>
+                    <label for="option-0">Computer</label>
+                     
+                    <input type="radio" name="option" id="option-1" value="1" onclick="OnClickOption(this)"/>
+                    <label for="option-1">Human</label>      
                 </label>
             </fieldset>
             </div>
