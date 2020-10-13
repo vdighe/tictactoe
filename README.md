@@ -3,7 +3,7 @@ Tic Tac Toe Game
 Design a fun game 'Tic Tac Toe' with HTML, CSS and Javascript
 
 ## Setup
-Make to work with standard browsers
+Made to work with standard browsers
 
 ## Dependencies
 
@@ -26,24 +26,33 @@ Make to work with standard browsers
 * As a user, I should be able to play the game again without refreshing the page
   There is a reset or Play Again button
 
-### Code layout and description page Currently, there are three main files.
+### Code layout and description page 
+Currently, there are three main files.
 1. index.html
     Works on the presentation logic. Draw the game board. The play options for opponent are either computer or human. 
 2. js/challenge.js
 3. styles/style.css
 
 ### Planning, Bonus Features, Issues and Fixes
-* Worked on the rough handdrawn sketch. Started with PixArt project and Grid (10X10) project code base.
-* Spent a lot of time updating the stylesheet (Need to learn to get the basic sketch working before putting time on enhancing the Stylesheet)
-* Interesting to develop the logic for winning combination check.
-* Added logic for taking turns to play, disable clicks, and show the next turn div.
+* Worked on the rough hand drawn sketch. Started with PixArt and Grid (10X10) project code base.
+* Spent good amount of time updating the stylesheet (Need to learn to get the basic MVP working before putting time on enhancing the Stylesheet). Encountered some glitches in drawing the symbols in the grid. Redesigned the grid with simple block format.
+* Developed the logic for winning combination check.
+* Added logic for taking turns to play, disable clicks, and show the next turn to play.
 * Added logic for making the storage (used session storage). Had to spend time to get the logic working.
-* Added logic for playing an audio file when a player wins 3 times. Reset the score
+* Added logic for playing an audio file when a player wins 3 times. Reset the score to 0
 * Added logic for AI (Computer plays), used the MINMAX algorithm. Took lot of time to get to work.
-* Made both AI or manual mode to play as an opponent.
-* Added radio button option to choose either Computer or Human to play.
-* In issue found to select Human option when first time clicked or Reset happens
+* Made both Computer(AI) or manual mode to play as an opponent.
+* Added radio button option to choose either Computer or Human to play against you.
+* ISSUE: The radio button shows(by default) the computer as an opponent player. However, only when either of the radio buttons are clicked, the radio button block goes aways, and a message is shown. "Play Against Computer" or "Play Against Human"
+
+### Future corrections and additions
+* Make the code modular and based on object oriented design.
+* Make the score card visibly appealing.
+* Highlight the winning three squares with a color to flash for few secs.
+* Test against the mobile screens, and correct.
+* Enhance to play against online opponent.
+* Give user choice to customize the tokens.
 
 ## Copyright and attribution
 
-Copyright (c) 2016 DataMade. Released under the MIT License.
+Copyright (c) 2016 DataMade. Released under the MIT License.  https://vdighe.github.io/tictactoe/
