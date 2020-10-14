@@ -22,23 +22,23 @@ Use the standard browsers and mobile screen to access the game page.
 
 ##### Extra Features
 * Keeps track of multiple game rounds, with win or lose counter.
-* After three successful wins, an audio is played, and the score is then reset.
+* After three successful wins, an audio is played, and the winner's score is reset.
 * An AI component is added (Opponent player as Computer) to play against. 
 
 #### Code layout and description page 
 * There are three main files.
-1. index.html
+  1. index.html
     * Works on the presentation logic. Draw the game board. The play options for opponent are either computer or human. 
-2. js/challenge.js
+  2. js/challenge.js
     * Main logic for the game.
-3. styles/style.css
-4. Design: 
-https://github.com/vdighe/tictactoe/blob/main/extras/TicTacToeBasic.png
-5. MINIMAX Algorithm: 
-  * Rough sketch
-  
-
-
+  3. styles/style.css
+* Design: 
+  1. Rough sketch:
+    * 
+      https://github.com/vdighe/tictactoe/blob/main/extras/TicTacToeBasic.png
+  2. MINIMAX Algorithm: 
+    * Rough sketch
+      https://github.com/vdighe/tictactoe/blob/main/extras/IMG_9963.JPG
 
 #### Planning, Bonus Features, Issues and Fixes
 * Worked on the rough hand drawn sketch. Started with PixArt and Grid (10X10) project code base.
